@@ -1,2 +1,2 @@
-# tensor_viewer
-a tool that simplifies the interactive visualization of tensor-type data using javascript
+# Beautiful Plot Examples
+Some examples of beautiful plots to display data.
