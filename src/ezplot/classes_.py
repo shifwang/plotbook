@@ -6,8 +6,8 @@ from .plots import (
     make_occur_plot,
     make_occur_plot_2,
     make_sunburst_plot,
-    make_line_plot,
-    make_scatter_plot,
+    make_interactive_scatter_plot,
+    make_interactive_line_plot,
 )
 
 
@@ -65,7 +65,8 @@ def tab_show(X, Y, df,
     for rank, i in enumerate(orders):
         with tabs[i]:
             plot_func = plot_functions[rank]
-            plot_func(X, Y, df, force_dtype=force_dtype)
+            plot_func(X, Y, df, force_dtype=force_dtype) 
+            
 
 def auto_plot_single(X, Y, df, force_dtype={}, infer_dtype=False):
     ''' Plot X vs Y with knowledge that X and Y are single dimension.
@@ -121,8 +122,8 @@ def auto_plot_single(X, Y, df, force_dtype={}, infer_dtype=False):
             score_scatter_plot = 0.9
         plot_names += ['Scatter Chart', 'Line Chart']
         plot_functions +=[
-            make_scatter_plot,
-            make_line_plot,
+            make_interactive_scatter_plot,
+            make_interactive_line_plot,
         ]
         scores += [
             score_scatter_plot,

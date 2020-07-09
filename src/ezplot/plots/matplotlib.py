@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import ipywidgets as widgets
 import numpy as np
 
 def heatmap(x, y, size):
@@ -38,15 +39,34 @@ def make_occur_plot(X, Y, df, force_dtype={}):
     values, counts = np.unique(output, return_counts=True)
     x = pd.Series([value[0] for value in values])
     y = pd.Series([value[1] for value in values])
-    heatmap(x, y, counts)
+    return heatmap(x, y, counts)
     
-def make_scatter_plot(X, Y, df, force_dtype={}):
+def make_scatter_plot(X, Y, df, force_dtype={}, **params):
     fig, ax = plt.subplots()
     ax.scatter(df[X], df[Y])
+    ax.set_xlabel(X)
+    ax.set_ylabel(Y)
+    if 'title' in params:
+        ax.set_title(params['title'])
     plt.show(fig)
 
-def make_line_plot(X, Y, df, force_dtype={}):
+def make_interactive_scatter_plot(X, Y, df, force_dtype={}):
+    widgets.interact(
+        lambda Title: make_scatter_plot(X, Y, df, force_dtype, title=Title),
+        Title="Title",
+    )
+def make_line_plot(X, Y, df, force_dtype={}, **params):
     fig, ax = plt.subplots()
     ordered = df.sort_values(X)
     ax.plot(ordered[X], ordered[Y], linewidth=2)
+    ax.set_xlabel(X)
+    ax.set_ylabel(Y)
+    if 'title' in params:
+        ax.set_title(params['title'])
     plt.show(fig)
+
+def make_interactive_line_plot(X, Y, df, force_dtype={}):
+    widgets.interact(
+        lambda Title: make_line_plot(X, Y, df, force_dtype, title=Title),
+        Title="Title",
+    )
