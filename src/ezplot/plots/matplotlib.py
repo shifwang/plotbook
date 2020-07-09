@@ -40,4 +40,13 @@ def make_occur_plot(X, Y, df, force_dtype={}):
     y = pd.Series([value[1] for value in values])
     heatmap(x, y, counts)
     
+def make_scatter_plot(X, Y, df, force_dtype={}):
+    fig, ax = plt.subplots()
+    ax.scatter(df[X], df[Y])
+    plt.show(fig)
 
+def make_line_plot(X, Y, df, force_dtype={}):
+    fig, ax = plt.subplots()
+    ordered = df.sort_values(X)
+    ax.plot(ordered[X], ordered[Y], linewidth=2)
+    plt.show(fig)

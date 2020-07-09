@@ -1,11 +1,16 @@
 import pandas as pd
 import visions as v
 import ipywidgets as widgets
+import numpy as np
 from .plots import (
     make_occur_plot,
     make_occur_plot_2,
     make_sunburst_plot,
+    make_line_plot,
+    make_scatter_plot,
 )
+
+
 def auto_plot(X : list, Y : list, df, infer_dtype=True, force_dtype={}):
     ''' automatically plot the relationship between X and Y
     Parameters
@@ -42,6 +47,26 @@ def auto_plot(X : list, Y : list, df, infer_dtype=True, force_dtype={}):
     else:
         raise NotImplementedError()
 
+def tab_show(X, Y, df,
+             force_dtype={},
+             plot_names=[],
+             plot_functions=[],
+             scores=[]):
+    ''' Show figures in a tab widget
+    '''
+    tabs = []
+    orders = len(scores) - 1 - np.argsort(scores)
+    for i in orders:
+        tabs.append(widgets.Output())
+    tab = widgets.Tab(children = tabs)
+    for rank, i in enumerate(orders):
+        tab.set_title(i, plot_names[rank])
+    display(tab)
+    for rank, i in enumerate(orders):
+        with tabs[i]:
+            plot_func = plot_functions[rank]
+            plot_func(X, Y, df, force_dtype=force_dtype)
+
 def auto_plot_single(X, Y, df, force_dtype={}, infer_dtype=False):
     ''' Plot X vs Y with knowledge that X and Y are single dimension.
     '''
@@ -51,29 +76,58 @@ def auto_plot_single(X, Y, df, force_dtype={}, infer_dtype=False):
             if colname not in force_dtype:
                 force_dtype[colname] = dtype
     
+    plot_names = []
+    plot_functions = []
+    scores = []
     set1 = {'String', 'Categorical', 'Integer'}
 
     if (
-        (str(force_dtype[X]) in set1),
+        (str(force_dtype[X]) in set1) and
         (str(force_dtype[Y]) in set1)
     ):
+        n_warning = 0
         if df[X].nunique() > len(X) // 2:
+            n_warning += 1
             UserWarning("column {X} has too many unique values.")
         if df[Y].nunique() > len(Y) // 2:
+            n_warning += 1
             UserWarning("column {Y} has too many unique values.")
-        out1 = widgets.Output()
-        out2 = widgets.Output()
-        out3 = widgets.Output()
-        tab = widgets.Tab(children = [out1, out2, out3])
-        tab.set_title(0, 'Sunburst')
-        tab.set_title(1, 'Occurence Plot')
-        tab.set_title(2, 'Heatmap')
-        display(tab)
-        with out1:
-            make_sunburst_plot(X, Y, df, force_dtype=force_dtype)
-        with out2:
-            make_occur_plot(X, Y, df, force_dtype=force_dtype)
-        with out3:
-            make_occur_plot_2(X, Y, df, force_dtype=force_dtype)
-
+        
+        plot_names += ['Sunburst', 'Occurence Plot', 'Heatmap']
+        plot_functions +=[
+            make_sunburst_plot,                  
+            make_occur_plot,
+            make_occur_plot_2,
+        ]
+        scores += [
+            1 - n_warning * 0.1,
+            0.9 - n_warning * 0.1,
+            0.8 - n_warning * 0.1,
+        ]
+    set2 = {'Integer', 'Float'}
+    
+    if (
+        (str(force_dtype[X]) in set2) and
+        (str(force_dtype[X]) in set2)
+    ):
+        X_overlap = df.groupby(X)[Y].count().max()
+        if X_overlap > 1:
+            score_line_plot = 0
+        else:
+            score_line_plot = 1
+        if X_overlap > len(df[X]) // 20:
+            score_scatter_plot = 0.8
+        else:
+            score_scatter_plot = 0.9
+        plot_names += ['Scatter Chart', 'Line Chart']
+        plot_functions +=[
+            make_scatter_plot,
+            make_line_plot,
+        ]
+        scores += [
+            score_scatter_plot,
+            score_line_plot,
+        ]
+        pass
+    tab_show(X, Y, df, force_dtype, plot_names, plot_functions, scores)
     pass
