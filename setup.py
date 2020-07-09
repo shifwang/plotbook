@@ -11,7 +11,7 @@ with (source_root / "README.md").open(encoding="utf-8") as f:
 with (source_root / "requirements.txt").open(encoding="utf8") as f:
     requirements = f.readlines()
 
-version = "0.5"
+version = "0.0.5"
 
 with (source_root / "src" / "ezplot" / "version.py").open(
     "w", encoding="utf-8"
