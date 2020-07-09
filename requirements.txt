@@ -25,3 +25,5 @@ tqdm>=4.43.0
 ipywidgets>=7.5.1
 # shapely
 shapely>=1.7.0
+# plotly
+plotly>=4.6.0

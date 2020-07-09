@@ -1,8 +1,10 @@
 import pandas as pd
 import visions as v
+import ipywidgets as widgets
 from .plots import (
-    make_occur_map,
-    make_occur_map_2
+    make_occur_plot,
+    make_occur_plot_2,
+    make_sunburst_plot,
 )
 def auto_plot(X : list, Y : list, df, infer_dtype=True, force_dtype={}):
     ''' automatically plot the relationship between X and Y
@@ -59,7 +61,19 @@ def auto_plot_single(X, Y, df, force_dtype={}, infer_dtype=False):
             UserWarning("column {X} has too many unique values.")
         if df[Y].nunique() > len(Y) // 2:
             UserWarning("column {Y} has too many unique values.")
-        make_occur_map(X, Y, df, force_dtype=force_dtype)
-        make_occur_map_2(X, Y, df, force_dtype=force_dtype)
-        
+        out1 = widgets.Output()
+        out2 = widgets.Output()
+        out3 = widgets.Output()
+        tab = widgets.Tab(children = [out1, out2, out3])
+        tab.set_title(0, 'Sunburst')
+        tab.set_title(1, 'Occurence Plot')
+        tab.set_title(2, 'Heatmap')
+        display(tab)
+        with out1:
+            make_sunburst_plot(X, Y, df, force_dtype=force_dtype)
+        with out2:
+            make_occur_plot(X, Y, df, force_dtype=force_dtype)
+        with out3:
+            make_occur_plot_2(X, Y, df, force_dtype=force_dtype)
+
     pass
