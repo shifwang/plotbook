@@ -13,7 +13,7 @@ with (source_root / "requirements.txt").open(encoding="utf8") as f:
 
 version = "0.0.5"
 
-with (source_root / "src" / "ezplot" / "version.py").open(
+with (source_root / "src" / "plotbook" / "version.py").open(
     "w", encoding="utf-8"
 ) as f:
     f.writelines(
@@ -25,7 +25,7 @@ with (source_root / "src" / "ezplot" / "version.py").open(
     )
 
 setup(
-    name="ezplot",
+    name="plotbook",
     version=version,
     author="Yu Wang",
     author_email="shifwangonline@gmail.com",
