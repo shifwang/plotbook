@@ -21,3 +21,21 @@ def make_occur_plot_2(X, Y, df, force_dtype={}):
     ax = sn.heatmap(out)
     fig = ax.get_figure()
     plt.show(fig)
+
+def make_beeswamp_plot(X, Y, df, force_dtype={}, **params):
+    ax = sn.swarmplot(x=X, y = Y, data=df)
+    fig = ax.get_figure()
+    plt.show(ax)
+
+def make_density_plot(X, Y, df, force_dtype={}, **params):
+    pass
+
+def make_box_plot_seaborn(X, Y, df, force_dtype={}, **params):
+    ax = sn.boxplot(df[X], df[Y])
+    fig = ax.get_figure()
+    plt.show(fig)
+
+def make_violin_plot_seaborn(X, Y, df, force_dtype={}, **params):
+    ax = sn.violinplot(df[X], df[Y])
+    fig = ax.get_figure()
+    plt.show(fig)
