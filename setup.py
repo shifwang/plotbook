@@ -3,7 +3,7 @@ from pathlib import Path
 from setuptools import find_packages, setup
 
 # Read the contents of README file
-source_root = Path(".")
+source_root = Path(__file__).parent
 with (source_root / "README.md").open(encoding="utf-8") as f:
     long_description = f.read()
 
@@ -11,7 +11,7 @@ with (source_root / "README.md").open(encoding="utf-8") as f:
 with (source_root / "requirements.txt").open(encoding="utf8") as f:
     requirements = f.readlines()
 
-version = "0.0.5"
+version = "0.0.6"
 
 with (source_root / "src" / "plotbook" / "version.py").open(
     "w", encoding="utf-8"
@@ -31,7 +31,7 @@ setup(
     author_email="shifwangonline@gmail.com",
     packages=find_packages("src"),
     package_dir={"": "src"},
-    url="https://github.com/shifwang/beautiful_plots",
+    url="https://github.com/shifwang/plotbook",
     license="MIT",
     description="Generate automatic plot for pandas DataFrame",
     python_requires=">=3.6",

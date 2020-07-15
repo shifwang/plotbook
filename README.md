@@ -26,6 +26,6 @@ jupyter nbextension list
 ## Demos
 Example images in the jupyter notebook:
 
-![Example1](imgs/example1.png)
-![Example2](imgs/example2.png)
-![Example3](imgs/example3.png)
+![Example1](https://github.com/shifwang/imgs/example1.png)
+![Example2](https://github.com/shifwang/imgs/example2.png)
+![Example3](https://github.com/shifwang/imgs/example3.png)
