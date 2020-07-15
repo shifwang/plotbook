@@ -85,22 +85,23 @@ def make_scatter_plot(Xs, Y, df, force_dtype={}, **params):
 def make_interactive_scatter_plot(Xs, Y, df, force_dtype={}):
     def plot(**params):
         make_scatter_plot(Xs, Y, df, force_dtype, **params)
+    key = Xs if isinstance(Xs, str) else Xs[1]
     widgets.interact(
         plot,
         Title="",
-        xlabel=Xs[1],
+        xlabel=key,
         ylabel=Y,
         xmin=widgets.FloatSlider(
-            min=df[Xs[1]].min() - (df[Xs[1]].max() - df[Xs[1]].min())/10,
-            max=df[Xs[1]].min(),
-            value=df[Xs[1]].min() - (df[Xs[1]].max() - df[Xs[1]].min())/20,
-            step=max(df[Xs[1]].max() - df[Xs[1]].min(),1)/100,
+            min=df[key].min() - (df[key].max() - df[key].min())/10,
+            max=df[key].min(),
+            value=df[key].min() - (df[key].max() - df[key].min())/20,
+            step=max(df[key].max() - df[key].min(),1)/100,
         ),
         xmax=widgets.FloatSlider(
-            min=df[Xs[1]].max(),
-            max=df[Xs[1]].max() + (df[Xs[1]].max() - df[Xs[1]].min())/10,
-            value=df[Xs[1]].max() + (df[Xs[1]].max() - df[Xs[1]].min())/20,
-            step=(df[Xs[1]].max() - df[Xs[1]].min())/100,
+            min=df[key].max(),
+            max=df[key].max() + (df[key].max() - df[key].min())/10,
+            value=df[key].max() + (df[key].max() - df[key].min())/20,
+            step=(df[key].max() - df[key].min())/100,
         ),
         ymin=widgets.FloatSlider(
             min=df[Y].min() - (df[Y].max() - df[Y].min())/10,
@@ -201,23 +202,23 @@ def make_line_plot(Xs, Y, df, force_dtype={}, **params):
 def make_interactive_line_plot(Xs, Y, df, force_dtype={}):
     def plot(**params):
         make_line_plot(Xs, Y, df, force_dtype, **params)
-        
+    key = Xs if isinstance(Xs, str) else Xs[1]
     widgets.interact(
         plot,
         Title="",
-        xlabel=Xs[1],
+        xlabel=key,
         ylabel=Y,
         xmin=widgets.FloatSlider(
-            min=df[Xs[1]].min() - (df[Xs[1]].max() - df[Xs[1]].min())/10,
-            max=df[Xs[1]].min(),
-            value=df[Xs[1]].min() - (df[Xs[1]].max() - df[Xs[1]].min())/20,
-            step=max(df[Xs[1]].max() - df[Xs[1]].min(),1)/100,
+            min=df[key].min() - (df[key].max() - df[key].min())/10,
+            max=df[key].min(),
+            value=df[key].min() - (df[key].max() - df[key].min())/20,
+            step=max(df[key].max() - df[key].min(),1)/100,
         ),
         xmax=widgets.FloatSlider(
-            min=df[Xs[1]].max(),
-            max=df[Xs[1]].max() + (df[Xs[1]].max() - df[Xs[1]].min())/10,
-            value=df[Xs[1]].max() + (df[Xs[1]].max() - df[Xs[1]].min())/20,
-            step=(df[Xs[1]].max() - df[Xs[1]].min())/100,
+            min=df[key].max(),
+            max=df[key].max() + (df[key].max() - df[key].min())/10,
+            value=df[key].max() + (df[key].max() - df[key].min())/20,
+            step=(df[key].max() - df[key].min())/100,
         ),
         ymin=widgets.FloatSlider(
             min=df[Y].min() - (df[Y].max() - df[Y].min())/10,

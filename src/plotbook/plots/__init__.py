@@ -2,7 +2,7 @@ from .seaborn import (
     make_occur_plot_2,
     make_density_plot,
     make_violin_plot_seaborn,
-    make_interactive_beeswamp,
+    make_interactive_beeswarm,
     make_interactive_violin,
     make_interactive_boxplot,
 )
