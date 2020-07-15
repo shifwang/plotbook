@@ -41,15 +41,28 @@ def make_occur_plot(X, Y, df, force_dtype={}):
     y = pd.Series([value[1] for value in values])
     return heatmap(x, y, counts)
     
-def make_scatter_plot(X, Y, df, force_dtype={}, **params):
+def make_scatter_plot(Xs, Y, df, force_dtype={}, **params):
     fig, ax = plt.subplots(
         figsize=(params['Figsize_x'], params['Figsize_y'])
     )
-    ax.scatter(df[X], df[Y],
-               s=params['markersize'],
-               alpha=params['alpha'],
-               color=params['color'],
-              )
+    if isinstance(Xs, str):
+        Xs = [Xs]
+    if len(Xs) == 1:
+        ax.scatter(df[Xs[0]], df[Y],
+                   s=params['markersize'],
+                   alpha=params['alpha'],
+                   color=params['color'],
+                    )
+    elif len(Xs) == 2:
+        values = sorted(df[Xs[0]].unique())
+        for X1_unique in values:
+            ordered = df[df[Xs[0]] == X1_unique]
+            ax.scatter(ordered[Xs[1]], ordered[Y],
+                s=params['markersize'],
+                alpha=params['alpha'],
+            )
+        ax.legend(values)
+    
     ax.set_xlabel(params['xlabel'])
     ax.set_ylabel(params['ylabel'])
     if 'Title' in params:
@@ -69,25 +82,25 @@ def make_scatter_plot(X, Y, df, force_dtype={}, **params):
     if params['save']:
         fig.savefig('saved_scatter_plot.png')
 
-def make_interactive_scatter_plot(X, Y, df, force_dtype={}):
+def make_interactive_scatter_plot(Xs, Y, df, force_dtype={}):
     def plot(**params):
-        make_scatter_plot(X, Y, df, force_dtype, **params)
+        make_scatter_plot(Xs, Y, df, force_dtype, **params)
     widgets.interact(
         plot,
         Title="",
-        xlabel=X,
+        xlabel=Xs[1],
         ylabel=Y,
         xmin=widgets.FloatSlider(
-            min=df[X].min() - (df[X].max() - df[X].min())/10,
-            max=df[X].min(),
-            value=df[X].min() - (df[X].max() - df[X].min())/20,
-            step=max(df[X].max() - df[X].min(),1)/100,
+            min=df[Xs[1]].min() - (df[Xs[1]].max() - df[Xs[1]].min())/10,
+            max=df[Xs[1]].min(),
+            value=df[Xs[1]].min() - (df[Xs[1]].max() - df[Xs[1]].min())/20,
+            step=max(df[Xs[1]].max() - df[Xs[1]].min(),1)/100,
         ),
         xmax=widgets.FloatSlider(
-            min=df[X].max(),
-            max=df[X].max() + (df[X].max() - df[X].min())/10,
-            value=df[X].max() + (df[X].max() - df[X].min())/20,
-            step=(df[X].max() - df[X].min())/100,
+            min=df[Xs[1]].max(),
+            max=df[Xs[1]].max() + (df[Xs[1]].max() - df[Xs[1]].min())/10,
+            value=df[Xs[1]].max() + (df[Xs[1]].max() - df[Xs[1]].min())/20,
+            step=(df[Xs[1]].max() - df[Xs[1]].min())/100,
         ),
         ymin=widgets.FloatSlider(
             min=df[Y].min() - (df[Y].max() - df[Y].min())/10,
@@ -137,17 +150,35 @@ def make_interactive_scatter_plot(X, Y, df, force_dtype={}):
         half_spine=True,
         save=False,
     )
-def make_line_plot(X, Y, df, force_dtype={}, **params):
+def make_line_plot(Xs, Y, df, force_dtype={}, **params):
     fig, ax = plt.subplots(
         figsize=(params['Figsize_x'], params['Figsize_y'])
     )
-    ordered = df.sort_values(X)
-    ax.plot(ordered[X], ordered[Y],
-               marker=params['marker'],
-               markersize=params['markersize'],
-               linewidth=params['linewidth'],
-               color=params['color'],
-              )
+    if isinstance(Xs, str):
+        Xs = [Xs]
+    if len(Xs) == 1:
+        ordered = df.sort_values(Xs[0])
+        ax.plot(ordered[Xs[0]], ordered[Y],
+                   marker=params['marker'],
+                   markersize=params['markersize'],
+                   linewidth=params['linewidth'],
+                   color=params['color'],
+                  )
+    elif len(Xs) == 2:
+        values = sorted(df[Xs[0]].unique())
+        for X1_unique in values:
+            ordered = df[df[Xs[0]] == X1_unique].sort_values(Xs[1])
+            ax.plot(
+                ordered[Xs[1]],
+                ordered[Y],
+                markersize=params['markersize'],
+                linewidth=params['linewidth'],
+            )
+        ax.legend(values)
+    else:
+        raise NotImplementedError()
+                         
+                         
     ax.set_xlabel(params['xlabel'])
     ax.set_ylabel(params['ylabel'])
     if 'Title' in params:
@@ -167,25 +198,26 @@ def make_line_plot(X, Y, df, force_dtype={}, **params):
     if params['save']:
         fig.savefig('saved_line_plot.png')
 
-def make_interactive_line_plot(X, Y, df, force_dtype={}):
+def make_interactive_line_plot(Xs, Y, df, force_dtype={}):
     def plot(**params):
-        make_line_plot(X, Y, df, force_dtype, **params)
+        make_line_plot(Xs, Y, df, force_dtype, **params)
+        
     widgets.interact(
         plot,
         Title="",
-        xlabel=X,
+        xlabel=Xs[1],
         ylabel=Y,
         xmin=widgets.FloatSlider(
-            min=df[X].min() - (df[X].max() - df[X].min())/10,
-            max=df[X].min(),
-            value=df[X].min() - (df[X].max() - df[X].min())/20,
-            step=max(df[X].max() - df[X].min(),1)/100,
+            min=df[Xs[1]].min() - (df[Xs[1]].max() - df[Xs[1]].min())/10,
+            max=df[Xs[1]].min(),
+            value=df[Xs[1]].min() - (df[Xs[1]].max() - df[Xs[1]].min())/20,
+            step=max(df[Xs[1]].max() - df[Xs[1]].min(),1)/100,
         ),
         xmax=widgets.FloatSlider(
-            min=df[X].max(),
-            max=df[X].max() + (df[X].max() - df[X].min())/10,
-            value=df[X].max() + (df[X].max() - df[X].min())/20,
-            step=(df[X].max() - df[X].min())/100,
+            min=df[Xs[1]].max(),
+            max=df[Xs[1]].max() + (df[Xs[1]].max() - df[Xs[1]].min())/10,
+            value=df[Xs[1]].max() + (df[Xs[1]].max() - df[Xs[1]].min())/20,
+            step=(df[Xs[1]].max() - df[Xs[1]].min())/100,
         ),
         ymin=widgets.FloatSlider(
             min=df[Y].min() - (df[Y].max() - df[Y].min())/10,
