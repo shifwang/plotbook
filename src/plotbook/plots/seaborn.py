@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import seaborn as sn
 import matplotlib.pyplot as plt
+import ipywidgets as widgets
+
 
 def make_occur_plot_2(X, Y, df, force_dtype={}):
     output = df.apply(lambda row: (row[X], row[Y]), axis=1)
@@ -21,21 +23,167 @@ def make_occur_plot_2(X, Y, df, force_dtype={}):
     ax = sn.heatmap(out)
     fig = ax.get_figure()
     plt.show(fig)
+    
 
 def make_beeswamp_plot(Xs, Y, df, force_dtype={}, **params):
-    ax = sn.swarmplot(x=Xs[1], y = Y, data=df,hue=Xs[0])
+    plt.figure(figsize=(params['Figsize_x'], params['Figsize_y']))
+    if params['color_palette'] == '':
+        with sn.color_palette():
+            ax = sn.swamplot(x=Xs[1], y = Y, data=df,hue=Xs[0])
+    else:
+        with sn.color_palette(params['color_palette'], df[Xs[0]].nunique()):
+            ax = sn.swamplot(x=Xs[1], y = Y, data=df,hue=Xs[0])
+    ax.set_title(params['Title'])
+    if 'half_spine' in params:
+        ax.spines["top"].set_visible(not params['half_spine'])  
+        ax.spines["right"].set_visible(not params['half_spine'])
+    ax.set_xlabel(params['xlabel'])
+    ax.set_ylabel(params['ylabel'])
     fig = ax.get_figure()
     plt.show(ax)
+    if params['save']:
+        fig.savefig('saved_beeswamp_plot.png')
+
+def make_interactive_beeswamp(Xs, Y, df, force_dtype={}):
+    def plot(**params):
+        make_beeswamp_plot(Xs, Y, df, force_dtype, **params)
+    widgets.interact(
+        plot,
+        Title="",
+        xlabel=Xs[1],
+        ylabel=Y,
+        Figsize_x=widgets.IntSlider(
+            min=1,
+            max=10,
+            value=4,
+        ),
+        Figsize_y=widgets.IntSlider(
+            min=1,
+            max=10,
+            value=3,
+        ),
+        color_palette=[
+            ('default',''),
+            ('muted','muted'),
+            ('Red-Blue','RdBu'),
+            ('Set1','Set1'),
+            ('Set2','Set2'),
+            ('Set3','Set3'),
+            ('husl','husl'),
+            ('spring', 'spring'),
+            ('summer', 'summer'),
+            ('ocean', 'ocean'),
+        ],
+        half_spine=True,
+        save=False,
+    )
 
 def make_density_plot(X, Y, df, force_dtype={}, **params):
     pass
 
 def make_box_plot_seaborn(Xs, Y, df, force_dtype={}, **params):
-    ax = sn.boxplot(df[Xs[1]], df[Y],hue=df[Xs[0]])
+    plt.figure(figsize=(params['Figsize_x'], params['Figsize_y']))
+    if params['color_palette'] == '':
+        with sn.color_palette():
+            ax = sn.boxplot(x=Xs[1], y = Y, data=df,hue=Xs[0])
+    else:
+        with sn.color_palette(params['color_palette'], df[Xs[0]].nunique()):
+            ax = sn.boxplot(x=Xs[1], y = Y, data=df,hue=Xs[0])
+    ax.set_title(params['Title'])
+    if 'half_spine' in params:
+        ax.spines["top"].set_visible(not params['half_spine'])  
+        ax.spines["right"].set_visible(not params['half_spine'])
+    ax.set_xlabel(params['xlabel'])
+    ax.set_ylabel(params['ylabel'])
     fig = ax.get_figure()
-    plt.show(fig)
+    plt.show(ax)
+    if params['save']:
+        fig.savefig('saved_boxplot_plot.png')
+
+def make_interactive_boxplot(Xs, Y, df, force_dtype={}):
+    def plot(**params):
+        make_box_plot_seaborn(Xs, Y, df, force_dtype, **params)
+    widgets.interact(
+        plot,
+        Title="",
+        xlabel=Xs[1],
+        ylabel=Y,
+        Figsize_x=widgets.IntSlider(
+            min=1,
+            max=10,
+            value=4,
+        ),
+        Figsize_y=widgets.IntSlider(
+            min=1,
+            max=10,
+            value=3,
+        ),
+        color_palette=[
+            ('default',''),
+            ('muted','muted'),
+            ('Red-Blue','RdBu'),
+            ('Set1','Set1'),
+            ('Set2','Set2'),
+            ('Set3','Set3'),
+            ('husl','husl'),
+            ('spring', 'spring'),
+            ('summer', 'summer'),
+            ('ocean', 'ocean'),
+        ],
+        half_spine=True,
+        save=False,
+    )
 
 def make_violin_plot_seaborn(Xs, Y, df, force_dtype={}, **params):
-    ax = sn.violinplot(df[Xs[1]], df[Y],hue=df[Xs[0]])
+    plt.figure(figsize=(params['Figsize_x'], params['Figsize_y']))
+    if params['color_palette'] == '':
+        with sn.color_palette():
+            ax = sn.violinplot(x=Xs[1], y = Y, data=df,hue=Xs[0])
+    else:
+        with sn.color_palette(params['color_palette'], df[Xs[0]].nunique()):
+            ax = sn.violinplot(x=Xs[1], y = Y, data=df,hue=Xs[0])
+    ax.set_title(params['Title'])
+    if 'half_spine' in params:
+        ax.spines["top"].set_visible(not params['half_spine'])  
+        ax.spines["right"].set_visible(not params['half_spine'])
+    ax.set_xlabel(params['xlabel'])
+    ax.set_ylabel(params['ylabel'])
     fig = ax.get_figure()
-    plt.show(fig)
+    plt.show(ax)
+    if params['save']:
+        fig.savefig('saved_violin_plot.png')
+        
+        
+def make_interactive_violin(Xs, Y, df, force_dtype={}):
+    def plot(**params):
+        make_violin_plot_seaborn(Xs, Y, df, force_dtype, **params)
+    widgets.interact(
+        plot,
+        Title="",
+        xlabel=Xs[1],
+        ylabel=Y,
+        Figsize_x=widgets.IntSlider(
+            min=1,
+            max=10,
+            value=4,
+        ),
+        Figsize_y=widgets.IntSlider(
+            min=1,
+            max=10,
+            value=3,
+        ),
+        color_palette=[
+            ('default',''),
+            ('muted','muted'),
+            ('Red-Blue','RdBu'),
+            ('Set1','Set1'),
+            ('Set2','Set2'),
+            ('Set3','Set3'),
+            ('husl','husl'),
+            ('spring', 'spring'),
+            ('summer', 'summer'),
+            ('ocean', 'ocean'),
+        ],
+        half_spine=True,
+        save=False,
+    )

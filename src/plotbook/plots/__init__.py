@@ -1,9 +1,10 @@
 from .seaborn import (
     make_occur_plot_2,
-    make_beeswamp_plot,
     make_density_plot,
-    make_box_plot_seaborn,
     make_violin_plot_seaborn,
+    make_interactive_beeswamp,
+    make_interactive_violin,
+    make_interactive_boxplot,
 )
 from .matplotlib import (
     make_occur_plot,

@@ -9,11 +9,10 @@ from .plots import (
     make_interactive_scatter_plot,
     make_interactive_line_plot,
     make_pie_chart,
-    make_beeswamp_plot,
-    make_box_plot,
     make_density_plot,
-    make_violin_plot_seaborn,
-    make_box_plot_seaborn,
+    make_interactive_beeswamp,
+    make_interactive_violin,
+    make_interactive_boxplot,
 )
 
 
@@ -162,9 +161,9 @@ def auto_plot_double(X1, X2, Y, df, force_dtype={}, infer_dtype=False):
             if min_obs > 1:
                 plot_names += ['Box Plot', 'Beeswamp Chart', 'Violin Chart']
                 plot_functions += [
-                    make_box_plot_seaborn,
-                    make_beeswamp_plot,
-                    make_violin_plot_seaborn,
+                    make_interactive_boxplot,
+                    make_interactive_beeswamp,
+                    make_interactive_violin,
                 ]
                 scores += [
                     1,
