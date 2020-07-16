@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import plotly.express as px
 import plotly.offline as pyo
+import ipywidgets as widgets
 # Set notebook mode to work in offline
 pyo.init_notebook_mode()
 
@@ -40,3 +41,53 @@ def make_sunburst_plot(Xs, Y, df, force_dtype={}):
         )
             
     fig.show()
+
+def make_interactive_heatmap(Xs, Y, df, force_dtype={}):
+    if isinstance(Xs, str):
+        Xs = [Xs]
+    def make_heatmap(**params):
+        if params['hist_x']:
+            params['hist_x'] = "histogram"
+        else:
+            params['hist_x'] = None
+        if params['hist_y']:
+            params['hist_y'] = "histogram"
+        else:
+            params['hist_y'] = None
+        fig = px.density_heatmap(
+            df,
+            x=Xs[-1],
+            y=Y,
+            marginal_x=params['hist_x'],
+            marginal_y=params['hist_y'],
+            title=params['Title'],
+            width=params['Figsize_x'] * 100,
+            height=params['Figsize_y'] * 100,
+        )
+        fig.update_layout(
+            xaxis_title=params['xlabel'],
+            yaxis_title=params['ylabel'],
+        )
+        fig.show()
+        if params['save']:
+            fig.write_image("saved_plotly_heatmap.png")
+    if len(Xs) == 1:
+        widgets.interact(
+            make_heatmap,
+            Title="",
+            xlabel=Xs[-1],
+            ylabel=Y,
+            Figsize_x=widgets.IntSlider(
+                min=1,
+                max=10,
+                value=4,
+            ),
+            Figsize_y=widgets.IntSlider(
+                min=1,
+                max=10,
+                value=3,
+            ),
+            hist_x=True,
+            hist_y=True,
+            save=False,
+        )

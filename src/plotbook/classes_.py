@@ -13,6 +13,7 @@ from .plots import (
     make_interactive_beeswarm,
     make_interactive_violin,
     make_interactive_boxplot,
+    make_interactive_heatmap,
 )
 
 
@@ -113,7 +114,7 @@ def auto_plot_double(X1, X2, Y, df, force_dtype={}, infer_dtype=False):
             (str(force_dtype[Y]) in set1)
         ):
             # All the variables are categorical
-            plot_names += ['Sunburst', 'Occurence Plot', 'Heatmap']
+            plot_names += ['Sunburst']
             plot_functions +=[
                 make_sunburst_plot,
             ]
@@ -195,11 +196,11 @@ def auto_plot_single(X, Y, df, force_dtype={}, infer_dtype=False):
         (str(force_dtype[X]) in set1) and
         (str(force_dtype[Y]) in set1)
     ):        
-        plot_names += ['Sunburst', 'Occurence Plot', 'Heatmap']
+        plot_names += ['Sunburst', 'Occurence Plot', 'Plotly Heatmap']
         plot_functions +=[
             make_sunburst_plot,                  
             make_occur_plot,
-            make_occur_plot_2,
+            make_interactive_heatmap,
         ]
         if df[X].nunique() < 20 and df[Y].nunique() < 20:
             scores += [

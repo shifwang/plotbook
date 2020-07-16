@@ -17,4 +17,5 @@ from .matplotlib import (
 )
 from .plotly import (
     make_sunburst_plot,
+    make_interactive_heatmap,
 )
