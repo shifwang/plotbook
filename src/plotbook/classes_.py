@@ -36,7 +36,8 @@ def auto_plot(X : list, Y : list, df, infer_dtype=True, force_dtype={}):
         Ordinal, Path, String, Time, TimeDelta, URL, UUID}
     '''
     if infer_dtype:
-        types_dict = v.infer_frame_type(df, typeset=v.typesets.CompleteSet())
+        
+        types_dict = v.infer_frame_type(df[X+Y], typeset=v.typesets.CompleteSet())
         for colname, dtype in types_dict.items():
             if colname not in force_dtype:
                 force_dtype[colname] = dtype
@@ -70,6 +71,7 @@ def tab_show(X, Y, df,
     '''
     tabs = []
     orders = list(reversed(np.argsort(scores)))
+    orders = [x for x in orders if scores[x] > 0] # only keep the positive scores
     for i in orders:
         tabs.append(widgets.Output())
     tab = widgets.Tab(children = tabs)
@@ -116,7 +118,7 @@ def auto_plot_double(X1, X2, Y, df, force_dtype={}, infer_dtype=False):
                 make_sunburst_plot,
             ]
             scores += [
-                1,
+                1 if df[X1].nunique() < 20 and df[X2].nunique() < 20 else 0,
             ]
         set2 = {'Integer', 'Float'}
     
@@ -199,11 +201,18 @@ def auto_plot_single(X, Y, df, force_dtype={}, infer_dtype=False):
             make_occur_plot,
             make_occur_plot_2,
         ]
-        scores += [
-            1,
-            0.9,
-            0.8,
-        ]
+        if df[X].nunique() < 20 and df[Y].nunique() < 20:
+            scores += [
+                1,
+                0.9,
+                0.8,
+            ]
+        else:
+            scores += [
+                0,
+                0.1,
+                0.2,
+            ]
     
     set2 = {'Integer', 'Float'}
     
